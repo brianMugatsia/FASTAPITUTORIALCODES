@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel, validator, Field
+from fastapi.responses import JSONResponse
+from datetime import datetime
 
 
 app =FastAPI()
@@ -18,8 +20,8 @@ class Item(BaseModel):
 
 @app.post("/items/")
 async def create_item(item: Item):
-    return{
-        "name": item.name,
-        "price": item.price
-
+    response_data = {
+        "timestamp": datetime.now().isoformat(),
+        "Data": {"name": item.name,"price": item.price}
     }
+    return JSONResponse(content=response_data, status_code=status.HTTP_201_CREATED)
